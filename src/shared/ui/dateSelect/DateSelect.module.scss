@@ -1,0 +1,78 @@
+.dateSelect {
+  display: inline-flex;
+  align-items: start;
+  gap: 12px;
+
+  .arrow {
+    all: unset;
+    cursor: pointer;
+    color: #ADBFDF;
+
+    &:hover {
+      color: #002CFB;
+    }
+  }
+}
+
+.trigger {
+  all: unset;
+
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-m);
+  font-size: var(--font-size-s);
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    color: #002CFB;
+  }
+
+  &[data-state='open'] {
+    color: #002CFB;
+  }
+
+  &[data-state='closed'] {
+    .icon {
+      transition: color, transform .2s ease-in-out;
+    }
+  }
+
+}
+
+.content {
+  z-index: 10;
+  min-width: 200px;
+  padding: 4px 0;
+  border-radius: 8px;
+  background-color: #FFF;
+  box-shadow: 0 4px 20px 0 #00000014;
+}
+
+.item {
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-regular);
+  line-height: 18px;
+  font-size: 12px;
+
+  padding: 7px 12px;
+
+  &[data-state='checked'] {
+    color: #015EF5;
+  }
+
+  &[data-highlighted] {
+    background-color: #DEE4FF;
+  }
+
+  &[data-disabled] {
+    color: #899CB1;
+    pointer-events: none;
+  }
+}

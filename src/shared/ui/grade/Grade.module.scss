@@ -1,0 +1,29 @@
+.gradeBlock {
+  display: inline-block;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-xs);
+  font-weight: var(--font-weight-regular);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.good {
+  border-color: var(--color-blue);
+  background-color: var(--color-light-blue);
+  color: var(--color-text-primary);
+}
+
+.excellent {
+  border-color: var(--color-green);
+  background-color: var(--color-light-green);
+  color: var(--color-text-green);
+}
+
+.bad {
+  border-color: var(--color-red);
+  background-color: var(--color-light-red);
+  color: var(--color-red);
+}

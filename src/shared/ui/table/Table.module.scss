@@ -1,0 +1,50 @@
+.root {
+  border-spacing: 0;
+  background-color: var(--color-background-secondary);
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: 0 4px 5px 0 #E9EDF3;
+  padding-bottom: 40px;
+}
+
+.cell {
+  padding: 8px 0;
+}
+
+
+.headCell {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-s);
+}
+
+th:first-child {
+  padding-left: 40px;
+}
+
+th:last-child {
+  padding-right: 19px;
+}
+
+tr {
+  height: 65px;
+}
+
+tbody tr {
+  position: relative;
+
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 40px;
+    right: 0;
+    z-index: 1;
+    background-color: #dbdfec;
+    height: 1px;
+  }
+
+  &:hover {
+    background-color: #D4DFF32B;
+  }
+}

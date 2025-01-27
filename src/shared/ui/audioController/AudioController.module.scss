@@ -1,0 +1,55 @@
+.player {
+  width: 352px;
+  padding: 12px 18px;
+  background-color: #DEE4FF;
+  border-radius: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  .controlBtn {
+    all: unset;
+    color: #ADBFDF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color .1s ease-in-out;
+
+    &:hover {
+      color: #002CFB;
+    }
+  }
+
+  .audioLength {
+    color: #122945;
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-m);
+    font-weight: var(--font-weight-regular);
+  }
+}
+
+.Root {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+  width: 164px;
+  height: 12px;
+}
+
+.Track {
+  border-radius: 2px;
+  background-color: #ADBFDF;
+  position: relative;
+  flex-grow: 1;
+  height: 3px;
+}
+
+.Range {
+  position: absolute;
+  background-color: #002CFB;
+  height: 100%;
+}

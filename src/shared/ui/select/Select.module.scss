@@ -1,0 +1,59 @@
+.trigger {
+  all: unset;
+
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-m);
+  font-size: var(--font-size-s);
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &[data-state='open'] {
+    color: var(--color-text-primary);
+
+    .icon {
+      color: #002CFB;
+      transform: rotate(180deg);
+      transition: color, transform .2s ease-in-out;
+    }
+  }
+
+  &[data-state='closed'] {
+    .icon {
+      transition: color, transform .2s ease-in-out;
+    }
+  }
+
+}
+
+.content {
+  z-index: 10;
+  min-width: 133px;
+  padding: 4px 0;
+  border-radius: 8px;
+  background-color: #FFF;
+  box-shadow: 0 4px 20px 0 #00000014;
+}
+
+.item {
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-regular);
+  line-height: 18px;
+  font-size: 12px;
+
+  padding: 7px 12px;
+
+  &[data-state='checked'] {
+    color: #015EF5;
+  }
+
+  &[data-highlighted] {
+    background-color: #DEE4FF;
+  }
+}

@@ -1,0 +1,12 @@
+@forward "globals";
+@forward "reset";
+
+body {
+  font-family: var(--font-family-main), serif;
+  height: 100vh;
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
+  font-weight: var(--font-weight-regular);
+}
