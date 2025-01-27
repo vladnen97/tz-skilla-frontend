@@ -1,8 +1,8 @@
 import { CallType, ResponseType } from './types'
 import { getRandomFeedback } from '../shared/utils'
 
-const BASE_URL = 'https://api.skilla.ru/mango'
-const API_KEY = 'testtoken'
+const BASE_URL = import.meta.env.VITE_BASE_URL
+const API_KEY = import.meta.env.VITE_API_KEY
 
 export const api = {
   getList: async (
