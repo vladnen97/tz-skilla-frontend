@@ -5,13 +5,16 @@ import CalendarIcon from '../../assets/icons/icon-calendar.svg?react'
 import { Select } from '../select'
 import { ComponentProps, ElementRef, forwardRef } from 'react'
 import * as RadixSelect from '@radix-ui/react-select'
+import { clsx } from 'clsx'
 
-type Props = ComponentProps<typeof Select>
+type Props = ComponentProps<typeof Select> & {
+  className?: string
+}
 
 export const DateSelect = forwardRef<
   ElementRef<typeof RadixSelect.Trigger>,
   Props
->(({ options, value, onChange }, forwardedRef) => {
+>(({ options, value, onChange, className }, forwardedRef) => {
   const onArrowLeftClick = () => {
     const prevItemId = options.findIndex((option) => option.value === value) - 1
 
@@ -32,7 +35,7 @@ export const DateSelect = forwardRef<
   }
 
   return (
-    <div className={s.dateSelect}>
+    <div className={clsx(s.dateSelect, className)}>
       <button className={s.arrow} onClick={onArrowLeftClick}>
         <ArrowLeftIcon />
       </button>

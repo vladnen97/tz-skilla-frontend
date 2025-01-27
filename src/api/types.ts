@@ -28,6 +28,7 @@ export type ErrorType = {
 }
 
 export type CallType = {
+  grade: 'good' | 'excellent' | 'bad'
   id: number
   partnership_id: string
   partner_data: {

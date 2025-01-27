@@ -1,26 +1,48 @@
 import { useEffect, useMemo, useState } from 'react'
-import {
-  Avatar,
-  AudioController,
-  Table,
-  Select,
-  CallType as Call,
-  Grade,
-} from './shared/ui'
-import ambient from './shared/assets/audio/ambient.mp3'
+import { DateSelect, Select, Table } from './shared/ui'
+import CloseIcon from './shared/assets/icons/close.svg?react'
 import s from './App.module.scss'
 import { api, CallType } from './api'
-import { getRandomFeedback, convertSecondsToString } from './shared/utils'
-import { DateSelect } from './shared/ui/dateSelect'
+import { Column, Sort } from './shared/ui/table/Table'
+import moment, { Moment } from 'moment'
+import { groupDataByDay } from './shared/utils/groupDataByDay'
 
-const headers = [
-  'Тип',
-  'Время',
-  'Сотрудник',
-  'Звонок',
-  'Источник',
-  'Оценка',
-  'Длительность',
+const headers: Column[] = [
+  {
+    key: 'type',
+    title: 'Тип',
+    sortable: false,
+  },
+  {
+    key: 'date',
+    title: 'Время',
+    sortable: true,
+  },
+  {
+    key: 'employee',
+    title: 'Сотрудник',
+    sortable: false,
+  },
+  {
+    key: 'phoneNumber',
+    title: 'Звонок',
+    sortable: false,
+  },
+  {
+    key: 'source',
+    title: 'Источник',
+    sortable: false,
+  },
+  {
+    key: 'grade',
+    title: 'Оценка',
+    sortable: false,
+  },
+  {
+    key: 'duration',
+    title: 'Длительность',
+    sortable: true,
+  },
 ]
 
 const selectOptions = [
@@ -28,7 +50,6 @@ const selectOptions = [
   { value: 'incoming', label: 'Входящие', disabled: false },
   { value: 'outgoing', label: 'Исходящие', disabled: false },
 ]
-
 const dateSelectOptions = [
   { value: '3days', label: '3 Дня', disabled: false },
   { value: 'week', label: 'Неделя', disabled: false },
@@ -37,16 +58,70 @@ const dateSelectOptions = [
 ]
 
 function App() {
-  const [data, setData] = useState<CallType[]>([])
+  const [isFiltered, setIsFiltered] = useState<boolean>(false)
+  const [data, setData] = useState<Map<string, CallType[]>>(new Map())
   const [callTypeValue, setCallTypeValue] = useState(selectOptions[0].value)
   const [dateValue, setDateValue] = useState(dateSelectOptions[0].value)
+  const [orderBy, setOrderBy] = useState<Sort>(null)
+
+  const sortOrderString = useMemo(() => {
+    if (!orderBy) return null
+
+    return `sort_by=${orderBy.key}&order=${orderBy.direction}`
+  }, [orderBy])
+  const inOutSortString = useMemo(() => {
+    if (callTypeValue === 'incoming') return 'in_out=1'
+    if (callTypeValue === 'outgoing') return 'in_out=0'
+
+    return null
+  }, [callTypeValue])
+  const getDateRangeString = useMemo(() => {
+    const today = moment()
+    let fromDate: string, toDate: string
+
+    const formatDate = (date: Moment) => {
+      return date.format('YYYY-MM-DD')
+    }
+
+    switch (dateValue) {
+      case 'week':
+        fromDate = formatDate(moment().subtract(7, 'days'))
+        toDate = formatDate(today)
+        break
+      case 'month':
+        fromDate = formatDate(moment().subtract(30, 'days'))
+        toDate = formatDate(today)
+        break
+      default:
+        fromDate = formatDate(moment().subtract(3, 'days'))
+        toDate = formatDate(today)
+    }
+
+    return `date_start=${fromDate}&date_end=${toDate}`
+  }, [dateValue])
+  const clearFilters = () => {
+    setCallTypeValue(selectOptions[0].value)
+    setDateValue(dateSelectOptions[0].value)
+    setIsFiltered(false)
+  }
 
   useEffect(() => {
-    api.getList().then((data) => {
-      console.log(data)
-      setData(data.results)
-    })
-  }, [])
+    api
+      .getList(sortOrderString, inOutSortString, getDateRangeString)
+      .then((data) => {
+        setData(groupDataByDay(data))
+      })
+  }, [sortOrderString, inOutSortString, getDateRangeString])
+  useEffect(() => {
+    if (
+      callTypeValue !== selectOptions[0].value ||
+      dateValue !== dateSelectOptions[0].value
+    ) {
+      setIsFiltered(true)
+    } else {
+      setIsFiltered(false)
+    }
+  }, [callTypeValue, dateValue])
 
   return (
     <div className={s.container}>
@@ -56,94 +131,54 @@ function App() {
           value={callTypeValue}
           onChange={setCallTypeValue}
         />
+        {isFiltered && (
+          <button className={s.clearFiltersBtn} onClick={clearFilters}>
+            Сбросить фильтры
+            <CloseIcon width={15} height={15} />
+          </button>
+        )}
         <DateSelect
+          className={s.dateSelect}
           options={dateSelectOptions}
           value={dateValue}
           onChange={setDateValue}
         />
       </div>
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            {headers.map((header, index, array) =>
-              array.length - 1 === index ? (
-                <Table.HeadCell key={index} align={'right'}>
-                  {header}
-                </Table.HeadCell>
-              ) : (
-                <Table.HeadCell key={index}>{header}</Table.HeadCell>
-              )
-            )}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {data.map((callUnit, i) => (
-            <TableRow unit={callUnit} key={i} />
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </div>
-  )
-}
-
-const TableRow = ({
-  unit: {
-    status,
-    in_out,
-    person_avatar,
-    person_name,
-    person_surname,
-    date,
-    source,
-    time,
-    from_number,
-    to_number,
-  },
-}: {
-  unit: CallType
-}) => {
-  const [isHovered, setIsHovered] = useState<boolean>(false)
-
-  const grade = useMemo(getRandomFeedback, [])
-
-  const mouseEnterHandler = () => {
-    setIsHovered(true)
-  }
-  const mouseLeaveHandler = () => {
-    setIsHovered(false)
-  }
-
-  return (
-    <Table.Row
-      onMouseEnter={mouseEnterHandler}
-      onMouseLeave={mouseLeaveHandler}
-    >
-      <Table.Cell className={s.type}>
-        <Call status={status} inOut={in_out} />
-      </Table.Cell>
-      <Table.Cell className={s.time}>{date}</Table.Cell>
-      <Table.Cell className={s.employee}>
-        <Avatar
-          src={person_avatar}
-          name={person_name}
-          surname={person_surname}
-        />
-      </Table.Cell>
-      <Table.Cell className={s.call}>
-        {in_out === 0 ? to_number : from_number}
-      </Table.Cell>
-      <Table.Cell className={s.source}>{source}</Table.Cell>
-      <Table.Cell className={s.grade}>
-        <Grade grade={grade} />
-      </Table.Cell>
-      <Table.Cell align={'right'} className={s.duration}>
-        {isHovered ? (
-          <AudioController src={ambient} />
-        ) : (
-          convertSecondsToString(time, 'sec')
+      <div className={s.tables}>
+        {data.size > 0 && (
+          <Table.Root>
+            <Table.Head columns={headers} sort={orderBy} onSort={setOrderBy} />
+            <Table.Body>
+              {data
+                .values()
+                .next()
+                .value?.map((callUnit, i) => (
+                  <Table.TableRow unit={callUnit} key={i} />
+                ))}
+            </Table.Body>
+          </Table.Root>
         )}
-      </Table.Cell>
-    </Table.Row>
+
+        {Array.from(data.keys())
+          .slice(1)
+          .map((date) => (
+            <>
+              <div className={s.date}>
+                {date} <span className={s.badge}>{data.get(date)?.length}</span>
+              </div>
+              <Table.Root>
+                <Table.Body>
+                  {data
+                    .get(date)
+                    ?.map((callUnit, i) => (
+                      <Table.TableRow unit={callUnit} key={i} />
+                    ))}
+                </Table.Body>
+              </Table.Root>
+            </>
+          ))}
+      </div>
+    </div>
   )
 }
 

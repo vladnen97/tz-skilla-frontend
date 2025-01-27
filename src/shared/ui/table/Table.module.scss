@@ -1,9 +1,6 @@
 .root {
   border-spacing: 0;
-  background-color: var(--color-background-secondary);
-  border-radius: 8px;
   width: 100%;
-  box-shadow: 0 4px 5px 0 #E9EDF3;
   padding-bottom: 40px;
 }
 
@@ -16,6 +13,30 @@
   font-weight: var(--font-weight-regular);
   color: var(--color-text-secondary);
   font-size: var(--font-size-s);
+
+  .headCellContent {
+    display: inline-block;
+    position: relative;
+    padding-right: 22px;
+
+
+    .icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+th {
+  cursor: default;
+
+  &[data-sortable=true] {
+    cursor: pointer;
+  }
 }
 
 th:first-child {
@@ -47,4 +68,37 @@ tbody tr {
   &:hover {
     background-color: #D4DFF32B;
   }
+}
+
+.type {
+  padding-left: 40px;
+  width: 94px;
+}
+
+.time {
+  width: 88px;
+}
+
+.employee {
+  width: 129px;
+}
+
+.call {
+  width: 325px;
+}
+
+.source {
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  width: 214px;
+}
+
+.grade {
+  width: 175px;
+}
+
+.duration {
+  padding-right: 40px;
 }

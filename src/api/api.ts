@@ -1,23 +1,36 @@
-import { ResponseType } from './types'
+import { CallType, ResponseType } from './types'
+import { getRandomFeedback } from '../shared/utils'
 
 const BASE_URL = 'https://api.skilla.ru/mango'
 const API_KEY = 'testtoken'
 
 export const api = {
-  getList: async (): Promise<ResponseType> => {
-    const response = await fetch(`${BASE_URL}/getList`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    })
+  getList: async (
+    sort: string | null,
+    inOut: string | null,
+    dateDiapason: string
+  ): Promise<CallType[]> => {
+    const response = await fetch(
+      `${BASE_URL}/getList?${dateDiapason}&${sort}&${inOut}`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+      }
+    )
 
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
 
-    return await response.json()
+    const data = (await response.json()) as ResponseType
+
+    return data.results.map((el) => ({
+      ...el,
+      grade: getRandomFeedback(),
+    }))
   },
   getRecord: async (
     recordId: string,

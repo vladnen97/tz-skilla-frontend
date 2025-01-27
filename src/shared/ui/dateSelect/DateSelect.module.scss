@@ -1,10 +1,13 @@
 .dateSelect {
   display: inline-flex;
-  align-items: start;
+  align-items: center;
   gap: 12px;
 
   .arrow {
     all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     color: #ADBFDF;
 
@@ -19,7 +22,7 @@
 
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-m);
+  line-height: var(--line-height-s);
   font-size: var(--font-size-s);
 
   cursor: pointer;

@@ -1,0 +1,24 @@
+.Root {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+  width: 164px;
+  height: 12px;
+}
+
+.Track {
+  border-radius: 2px;
+  background-color: #ADBFDF;
+  position: relative;
+  flex-grow: 1;
+  height: 3px;
+}
+
+.Range {
+  position: absolute;
+  background-color: #002CFB;
+  height: 100%;
+}

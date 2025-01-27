@@ -1,6 +1,6 @@
 export function convertSecondsToString(
   time: number,
-  format: 'sec' | 'ms'
+  format: 'sec' | 'ms' = 'sec'
 ): string {
   let minutes: number, remainingSeconds: number
 

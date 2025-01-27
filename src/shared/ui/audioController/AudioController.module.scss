@@ -6,6 +6,14 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  transform-origin: right;
+
+  animation: show-audio .2s ease-out;
+
+  &[data-disabled=true] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   .controlBtn {
     all: unset;
@@ -29,27 +37,11 @@
   }
 }
 
-.Root {
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  user-select: none;
-  touch-action: none;
-  width: 164px;
-  height: 12px;
-}
-
-.Track {
-  border-radius: 2px;
-  background-color: #ADBFDF;
-  position: relative;
-  flex-grow: 1;
-  height: 3px;
-}
-
-.Range {
-  position: absolute;
-  background-color: #002CFB;
-  height: 100%;
+@keyframes show-audio {
+  from {
+    transform: scaleX(.2);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
